@@ -1,6 +1,8 @@
-**Chirp**
+# Chirp
 
 **Chirp** is a mobile-only pure-proximity based Android app platform for people to interact with people around them. If you have a question to ask about the neighborhood you are in, or about a new place you are visiting, or at an event, this platform is a great way to break the ice, to get connected and stay connected.
+
+## User Stories
 
 *Required User Stories:*
 * [ ] Login with Facebook - 3h
@@ -36,10 +38,34 @@
 * [ ] Prevent expletives, afap
 
 
+## Status with app walkthrough
+
 Wireframes: <a href="https://popapp.in/w/projects/56d7933afc8bc907550fc94c/mockups">here</a>.
 
 *Walkthrough of all user stories:*
 
-![Video Walkthrough](demo.gif)
+![Video Walkthrough](wireframes.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+
+## Open-source libraries used
+
+- [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
+- [Glide](https://github.com/bumptech/glide/) - Image loading and caching library recommended for Android
+
+## License
+
+    Copyright [2016] Ravi Kumar Mandala
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
