@@ -20,6 +20,9 @@
 
 *Optional User Stories:*
 * [ ] Message ID based rooms for active discussion of interested parties
+* [ ] Vote up and Vote down to rate the messages
+* [ ] Implicit Intent to share stuff on this app
+* [ ] Fluid and intuitive UX
 * [ ] Private conversation with user from the profile page or from one of the rooms
 * [ ] Option to enable/disable location tracking in the app
 * [ ] Notifications on active app
@@ -27,11 +30,18 @@
 * [ ] Enable/Disable pop-up notifications
 * [ ] Login with Twitter
 * [ ] Sign up, email activation and Sign in
+* [ ] Use butterknife; Glide with customizations; Parcelable
 
 *Bonus User Stories:*
 * [ ] Talk with at least one IoT machine (like turn on a thermostat/coffee machine saying "hi")
+* [ ] Dynamic groups with passphrase
+* [ ] Screen lock with a PIN/Pattern/Fingerprint
+* [ ] Application walk-through to let users know different flows and features
 * [ ] Oauth 2.0 based login with GitHub/Google+/LinkedIn/Amazon/AOL/Box/Dropbox/Foursquare/Instagram/PayPal/Stripe/Yammer/Yandex/Zendesk
 * [ ] Guest login (???) or Go Anonymous option
+
+*Production readiness plan:*
+* [ ] Enable proguard; Deep Linking and Deep Searching of content
 
 *Notes:*
 * [ ] Minimum characters-limit on broadcast messages with smart checking.
