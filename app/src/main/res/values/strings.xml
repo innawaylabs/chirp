@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chirp</string>
+    <string name="app_name">Chirp Live!</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -14,4 +14,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="twitter_login_label">Connect with Twitter</string>
+
+    <string name="base_url">https://api.twitter.com/1.1/</string>
 </resources>

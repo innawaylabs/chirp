@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Owner: rmandala; Owner Id: 15613673 -->
+    <string name="twitter_api_key">5ziwld1dMDkM8kWZ8GdZkpYZn</string>
+    <string name="twitter_api_secret">b2VqwOHho1zmIK9R2g9pCUbSQruzjBhhkWsmEvXubHWB7mKBOo</string>
+    <string name="facebook_app_id">1012501598838313</string>
+    <string name="facebook_app_secret">065ec5264f4e8edce7aa12ff49b5dc6d</string>
+</resources>

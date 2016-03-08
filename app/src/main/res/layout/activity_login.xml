@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mandalalabs.chirp.LoginActivity">
+    tools:context=".activity.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar
@@ -72,6 +72,22 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/login_with_twitter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:onClick="loginWithTwitter"
+                android:text="@string/twitter_login_label"
+                android:textAllCaps="false"/>
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_with_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

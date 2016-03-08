@@ -1,4 +1,4 @@
-package com.mandalalabs.chirp;
+package com.mandalalabs.chirp.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.mandalalabs.chirp.R;
+import com.mandalalabs.chirp.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +72,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_login);
+
+        LoginButton loginWithFacebook = (LoginButton) findViewById(R.id.login_with_facebook);
+        loginWithFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(Constants.LOG_TAG, "Access Token: " + loginResult.getAccessToken());
+                Log.d(Constants.LOG_TAG, "Recently granted permissions: " + loginResult.getRecentlyGrantedPermissions().toString());
+                Log.d(Constants.LOG_TAG, "Recently denied  permissions: " + loginResult.getRecentlyDeniedPermissions().toString());
+                Toast.makeText(LoginActivity.this, "Facebook login successful!!!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), ChatRoomActivity.class);
+                startActivity(i);
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(LoginActivity.this, "Cancelled Facebook login!!!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e(Constants.LOG_TAG, "FacebookException: " + error.getMessage());
+                error.printStackTrace();
+                Toast.makeText(LoginActivity.this, "Exception while logging with Facebook :-(", Toast.LENGTH_SHORT).show();
+            }
+        });
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -91,6 +132,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void populateAutoComplete() {
@@ -342,6 +390,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public void loginWithTwitter(View view) {
+        Log.d(Constants.LOG_TAG, "Connecting with Twitter...");
+        Intent intent = new Intent(getApplicationContext(), TwitterLoginActivity.class);
+        startActivity(intent);
     }
 }
 
