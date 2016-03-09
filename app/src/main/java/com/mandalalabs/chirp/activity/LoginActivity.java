@@ -48,6 +48,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    private static final String TAG = Constants.LOG_TAG;
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -393,7 +394,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void loginWithTwitter(View view) {
-        Log.d(Constants.LOG_TAG, "Connecting with Twitter...");
+        Log.d(TAG, "Connecting with Twitter...");
         Intent intent = new Intent(getApplicationContext(), TwitterLoginActivity.class);
         startActivity(intent);
     }

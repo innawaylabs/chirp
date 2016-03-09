@@ -13,6 +13,7 @@ import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.utils.Constants;
 
 public class TwitterClient extends OAuthBaseClient {
+    private static final String TAG = Constants.LOG_TAG;
     public static final Class<? extends Api> REST_API_CLASS = TwitterApi.SSL.class;
     public static final String REST_CALLBACK_URL = "oauth://chirp";
 
@@ -23,7 +24,7 @@ public class TwitterClient extends OAuthBaseClient {
                 context.getResources().getString(R.string.twitter_api_key),
                 context.getResources().getString(R.string.twitter_api_secret),
                 REST_CALLBACK_URL);
-        Log.d(Constants.LOG_TAG, "Created a Twitter Client");
+        Log.d(TAG, "Created a Twitter Client");
 
     }
 
@@ -31,10 +32,10 @@ public class TwitterClient extends OAuthBaseClient {
         if (screenName != null && !screenName.isEmpty()) {
             RequestParams params = new RequestParams();
             params.put(Constants.keyScreenName, screenName.substring(2));
-            Log.d(Constants.LOG_TAG, "Sending API call to users/show.json");
+            Log.d(TAG, "Sending API call to users/show.json");
             client.get(getApiUrl("users/show.json"), params, handler);
         } else {
-            Log.d(Constants.LOG_TAG, "Sending API call to account/verify_credentials.json");
+            Log.d(TAG, "Sending API call to account/verify_credentials.json");
             client.get(getApiUrl("account/verify_credentials.json"), null, handler);
         }
     }

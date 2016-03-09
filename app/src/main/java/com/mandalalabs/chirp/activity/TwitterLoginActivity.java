@@ -10,6 +10,7 @@ import com.mandalalabs.chirp.net.TwitterClient;
 import com.mandalalabs.chirp.utils.Constants;
 
 public class TwitterLoginActivity extends OAuthLoginActivity<TwitterClient> {
+    private static final String TAG = Constants.LOG_TAG;
 
     private boolean loggedInWithTwitter;
 
@@ -18,7 +19,7 @@ public class TwitterLoginActivity extends OAuthLoginActivity<TwitterClient> {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            Log.d(Constants.LOG_TAG, "Restoring Instance State");
+            Log.d(TAG, "Restoring Instance State");
             loggedInWithTwitter = savedInstanceState.getBoolean("logged_in_with_twitter");
         }
         if (!loggedInWithTwitter) {
@@ -28,7 +29,7 @@ public class TwitterLoginActivity extends OAuthLoginActivity<TwitterClient> {
 
     @Override
     public void onLoginSuccess() {
-        Log.d(Constants.LOG_TAG, "Twitter login Successful!!");
+        Log.d(TAG, "Twitter login Successful!!");
         Toast.makeText(TwitterLoginActivity.this, "Twitter login successful!!!", Toast.LENGTH_LONG).show();
         loggedInWithTwitter = true;
         Intent i = new Intent(this, ChatRoomActivity.class);
@@ -45,7 +46,7 @@ public class TwitterLoginActivity extends OAuthLoginActivity<TwitterClient> {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        Log.d(Constants.LOG_TAG, "Saving Instance State");
+        Log.d(TAG, "Saving Instance State");
         outState.putBoolean("logged_in_with_twitter", loggedInWithTwitter);
     }
 }

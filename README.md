@@ -5,7 +5,7 @@
 ## User Stories
 
 *Required User Stories:*
-* [ ] Login with Facebook - 3h
+* [x] Login with Facebook - 3h
 * [ ] Virtual room: Send broadcast message to server
   * [ ] Client UI - 1h
   * [ ] Server to receive the message - 2h
@@ -28,8 +28,9 @@
 * [ ] Notifications on active app
 * [ ] Notifications on a backgrounded/closed app
 * [ ] Enable/Disable pop-up notifications
-* [ ] Login with Twitter
-* [ ] Sign up, email activation and Sign in
+* [x] Login with Twitter
+* [x] Sign up and Sign in
+* [ ] Need for email activation 
 * [ ] Use butterknife; Glide with customizations; Parcelable
 
 *Bonus User Stories:*
