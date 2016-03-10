@@ -38,6 +38,14 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.utils.Constants;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -344,6 +352,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        ParseUser loggedInUser;
         private final String mEmail;
         private final String mPassword;
 
@@ -354,22 +363,47 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+            loggedInUser = new ParseUser();
+            loggedInUser.setEmail(mEmail);
+            loggedInUser.setUsername(mEmail);
+            loggedInUser.setPassword(mPassword);
+
+            loggedInUser.signUpInBackground(new SignUpCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Log.d(TAG, "Signed up successfully: " + loggedInUser.toString());
+                        Toast.makeText(getApplicationContext(), "Signed up successfully: " + loggedInUser.toString(), Toast.LENGTH_SHORT).show();
+                        loginSuccessful();
+                    } else {
+                        e.printStackTrace();
+                        ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+                            @Override
+                            public void done(ParseUser user, ParseException e) {
+                                if (user != null) {
+                                    loginSuccessful();
+                                } else {
+                                    e.printStackTrace();
+                                    Log.e(TAG, "Login failed: " + e.getMessage());
+                                }
+                            }
+                        });
+                    }
                 }
+            });
+
+            try {
+                Thread.sleep(10000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            return true;
+            return loggedInUser != null;
+        }
+
+        private void loginSuccessful() {
+            loggedInUser = ParseUser.getCurrentUser();
+            Toast.makeText(getApplicationContext(), "LoggedInUser: " + loggedInUser.toString(), Toast.LENGTH_SHORT).show();
         }
 
         @Override

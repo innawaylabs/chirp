@@ -6,14 +6,10 @@
 
 *Required User Stories:*
 * [x] Login with Facebook - 3h
+* [x] Login with Twitter
+* [x] Sign up and Sign in
 * [ ] Virtual room: Send broadcast message to server
-  * [ ] Client UI - 1h
-  * [ ] Server to receive the message - 2h
-  * [ ] Comms to Server - 3h
 * [ ] Virtual room: Poll messages from server
-  * [ ] Client UI - 3h
-  * [ ] Server's REST API for polling - 2h
-  * [ ] Polling from Server (with count and max_id/since_id params) - 2h 
 * Interest based filtering
   * [ ] Client UI for setting filters (all in one group) - 4h
   * [ ] Apply filters while polling the server - 1h
@@ -28,8 +24,6 @@
 * [ ] Notifications on active app
 * [ ] Notifications on a backgrounded/closed app
 * [ ] Enable/Disable pop-up notifications
-* [x] Login with Twitter
-* [x] Sign up and Sign in
 * [ ] Need for email activation 
 * [ ] Use butterknife; Glide with customizations; Parcelable
 
@@ -53,9 +47,8 @@
 
 Wireframes: <a href="https://popapp.in/w/projects/56d7933afc8bc907550fc94c/mockups">here</a>.
 
-*Walkthrough of all user stories:*
-
-![Video Walkthrough](wireframes.gif)
+*Last stable status:*
+![Video Walkthrough](demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
