@@ -5,9 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".activity.ChatRoomActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/userDetails"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="18sp"
+        android:text="@string/no_clue_where_you_are"
+        android:textAlignment="center"
+        android:id="@+id/userLocation"
+        android:layout_below="@id/userDetails" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_below="@id/userLocation"
+        android:onClick="getNeighbors"
         android:text="WELCOME TO THE CHATROOM!!!"/>
 </RelativeLayout>

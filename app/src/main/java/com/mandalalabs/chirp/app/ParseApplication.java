@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.mandalalabs.chirp.R;
 import com.parse.Parse;
-import com.parse.ParseObject;
+import com.parse.ParseInstallation;
 import com.parse.interceptors.ParseLogInterceptor;
 
 public class ParseApplication extends Application {
@@ -20,8 +20,6 @@ public class ParseApplication extends Application {
                 .addNetworkInterceptor(new ParseLogInterceptor())
                 .build());
 
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
-  }
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+    }
 }
