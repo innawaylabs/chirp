@@ -10,17 +10,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mandalalabs.chirp.R;
+import com.mandalalabs.chirp.fragment.NeighborsFragment.OnListFragmentInteractionListener;
 import com.mandalalabs.chirp.utils.Constants;
 import com.parse.ParseObject;
 
 import java.util.List;
 
+/**
+ * {@link RecyclerView.Adapter} that can display a {@link ParseObject} and makes a call to the
+ * specified {@link OnListFragmentInteractionListener}.
+ * TODO: Replace the implementation with code for your data type.
+ */
 public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdapter.ViewHolder> {
+
     Context context;
     List<ParseObject> neighbors;
+    private final OnListFragmentInteractionListener mListener;
 
-    public NeighborsListAdapter(List<ParseObject> neighbors) {
+    public NeighborsListAdapter(List<ParseObject> neighbors, OnListFragmentInteractionListener listener) {
         this.neighbors = neighbors;
+        mListener = listener;
     }
 
     @Override
@@ -37,7 +46,7 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ParseObject neighbor = neighbors.get(position);
 
 //        Glide.with(context)
@@ -63,7 +72,7 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
         return neighbors == null ? 0 : neighbors.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivNeighborPic;
         TextView tvNeighborName;
 
@@ -72,6 +81,11 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
 
             ivNeighborPic = (ImageView) convertView.findViewById(R.id.ivNeighborPic);
             tvNeighborName = (TextView) convertView.findViewById(R.id.tvNeighborName);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + tvNeighborName + "'";
         }
     }
 }

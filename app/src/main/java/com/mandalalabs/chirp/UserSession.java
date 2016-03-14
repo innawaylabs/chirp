@@ -17,4 +17,5 @@ public class UserSession {
     public static ParseObject userLocationInfo;
     public static LocationRequest locationRequest;
     public static ArrayList<ParseObject> neighborsList;
+    public static ArrayList<ParseObject> chirpsList;
 }

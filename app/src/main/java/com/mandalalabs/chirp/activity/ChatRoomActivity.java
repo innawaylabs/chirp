@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +32,8 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.adapter.NeighborsListAdapter;
+import com.mandalalabs.chirp.fragment.ChirpsFragment;
+import com.mandalalabs.chirp.fragment.NeighborsFragment;
 import com.mandalalabs.chirp.utils.Constants;
 import com.mandalalabs.chirp.utils.PermissionUtils;
 import com.parse.FindCallback;
@@ -47,7 +48,9 @@ import java.util.List;
 public class ChatRoomActivity extends AppCompatActivity implements LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        NeighborsFragment.OnListFragmentInteractionListener,
+        ChirpsFragment.OnListFragmentInteractionListener {
     private static final String TAG = Constants.LOG_TAG;
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 100;
     private static final int REQUEST_CHECK_SETTINGS = 1000;
@@ -119,7 +122,7 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
             UserSession.neighborsList = new ArrayList<ParseObject>();
         }
         // Create adapter passing in the sample user data
-        NeighborsListAdapter adapter = new NeighborsListAdapter(UserSession.neighborsList);
+        NeighborsListAdapter adapter = new NeighborsListAdapter(UserSession.neighborsList, this);
         // Attach the adapter to the recyclerview to populate items
         rvNeighbors.setAdapter(adapter);
         // Set layout manager to position the items
@@ -171,7 +174,6 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
 
     private void startLocationUpdates() {
         Log.d(TAG, "startLocationUpdates()");
-        new Exception().printStackTrace();
         String[] locationPermissions = new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
@@ -250,7 +252,7 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         tvUserLocation.setText(
                 (userLocation == null) ?
                         getResources().getString(R.string.no_clue_where_you_are) :
-                        "Long: " + userLocation.getLongitude() + "; Lat: " + userLocation.getLatitude()
+                        "Lat: " + userLocation.getLatitude() + "; Long: " + userLocation.getLongitude()
         );
     }
 
@@ -286,5 +288,10 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
                 }
             });
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(ParseObject item) {
+
     }
 }
