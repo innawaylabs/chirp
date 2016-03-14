@@ -7,6 +7,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+
 public class UserSession {
     public static ParseUser loggedInUser;
     public static GoogleApiClient googleApiClient;
@@ -14,4 +16,5 @@ public class UserSession {
     public static Location currentLocation;
     public static ParseObject userLocationInfo;
     public static LocationRequest locationRequest;
+    public static ArrayList<ParseObject> neighborsList;
 }

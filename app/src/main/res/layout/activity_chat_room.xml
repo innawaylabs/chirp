@@ -5,11 +5,23 @@
     android:layout_height="match_parent"
     tools:context=".activity.ChatRoomActivity">
 
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="360dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvNeighbors"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:id="@+id/userDetails"/>
+        android:id="@+id/userDetails"
+        android:layout_below="@id/swipeContainer" />
 
     <TextView
         android:layout_width="match_parent"
@@ -27,5 +39,37 @@
         android:layout_centerVertical="true"
         android:layout_below="@id/userLocation"
         android:onClick="getNeighbors"
-        android:text="WELCOME TO THE CHATROOM!!!"/>
+        android:text="WELCOME TO THE CHATROOM!!!"
+        android:id="@+id/button" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button">
+        <EditText
+            android:id="@+id/etMessage"
+            android:layout_toLeftOf="@+id/btSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btSend"
+            android:gravity="top"
+            android:layout_weight="5"
+            android:hint="@string/message_hint"
+            android:imeOptions="actionSend"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/btSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:paddingRight="10dp"
+            android:layout_alignParentRight="true"
+            android:text="@string/send"
+            android:textSize="18sp" >
+        </Button>
+    </LinearLayout>
 </RelativeLayout>

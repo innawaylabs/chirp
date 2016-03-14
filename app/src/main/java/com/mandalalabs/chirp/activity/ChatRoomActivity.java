@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
+import com.mandalalabs.chirp.adapter.NeighborsListAdapter;
 import com.mandalalabs.chirp.utils.Constants;
 import com.mandalalabs.chirp.utils.PermissionUtils;
 import com.parse.FindCallback;
@@ -36,7 +40,6 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,7 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
     private static final String TAG = Constants.LOG_TAG;
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 100;
     private static final int REQUEST_CHECK_SETTINGS = 1000;
+    private RecyclerView rvNeighbors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +112,18 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
                 }
             }
         });
+
+        rvNeighbors = (RecyclerView) findViewById(R.id.rvNeighbors);
+
+        if (UserSession.neighborsList == null) {
+            UserSession.neighborsList = new ArrayList<ParseObject>();
+        }
+        // Create adapter passing in the sample user data
+        NeighborsListAdapter adapter = new NeighborsListAdapter(UserSession.neighborsList);
+        // Attach the adapter to the recyclerview to populate items
+        rvNeighbors.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvNeighbors.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -258,11 +274,15 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
+                    UserSession.neighborsList.addAll(objects);
                     Log.d(TAG, "List of neighboring users: size = " + objects.size());
                     for (ParseObject object: objects) {
                         ParseGeoPoint userLocation = (ParseGeoPoint) object.get(Constants.LOCATION_KEY);
                         Log.d(TAG, "User ID:" + object.get("userId") + "; Location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
+
+
                     }
+                    rvNeighbors.getAdapter().notifyDataSetChanged();
                 }
             });
         }

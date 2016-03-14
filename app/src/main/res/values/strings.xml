@@ -19,4 +19,7 @@
     <string name="base_url">https://api.twitter.com/1.1/</string>
     <string name="action_sign_in_as_guest">Sign in as Guest</string>
     <string name="no_clue_where_you_are">I have no clue where you are!!!</string>
+    <string name="message_hint">Say something...</string>
+    <string name="send">Send</string>
+    <string name="profile_neighbor">Neighbor Pic</string>
 </resources>
