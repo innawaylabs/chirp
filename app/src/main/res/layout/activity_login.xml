@@ -73,14 +73,21 @@
                 android:textStyle="bold" />
 
             <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/login_as_guest"
+                android:onClick="loginAsGuest"
+                android:text="@string/action_sign_in_as_guest"
+                android:layout_marginTop="16dp" />
+
+            <Button
                 android:id="@+id/login_with_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:onClick="loginWithTwitter"
-                android:text="@string/twitter_login_label"
-                android:textAllCaps="false"/>
+                android:text="@string/twitter_login_label" />
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_with_facebook"

@@ -3,6 +3,7 @@ package com.mandalalabs.chirp.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -13,9 +14,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,15 +42,12 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mandalalabs.chirp.R;
+import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.utils.Constants;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.LogInCallback;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,13 +66,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
@@ -82,6 +77,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     CallbackManager callbackManager;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message message) {
+            Toast.makeText(getApplicationContext(), "LoggedInUser: " + UserSession.loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,6 +336,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    public void loginAsGuest(View view) {
+        ParseAnonymousUtils.logIn(new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Anonymous login failed: ", e);
+                } else {
+                    UserSession.loggedInUser = ParseUser.getCurrentUser();
+                    Log.d(TAG, "Logged in successfully: " + UserSession.loggedInUser.toString());
+                    Toast.makeText(getApplicationContext(),
+                            "LoggedInUser: " + UserSession.loggedInUser.getEmail(), Toast.LENGTH_SHORT)
+                            .show();
+                    Intent intent = new Intent(getApplicationContext(), ChatRoomActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -351,8 +370,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        ParseUser loggedInUser;
         private final String mEmail;
         private final String mPassword;
 
@@ -364,46 +381,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            loggedInUser = new ParseUser();
-            loggedInUser.setEmail(mEmail);
-            loggedInUser.setUsername(mEmail);
-            loggedInUser.setPassword(mPassword);
+            ParseUser newUser = new ParseUser();
+            newUser.setEmail(mEmail);
+            newUser.setUsername(mEmail);
+            newUser.setPassword(mPassword);
 
-            loggedInUser.signUpInBackground(new SignUpCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Log.d(TAG, "Signed up successfully: " + loggedInUser.toString());
-                        Toast.makeText(getApplicationContext(), "Signed up successfully: " + loggedInUser.toString(), Toast.LENGTH_SHORT).show();
-                        loginSuccessful();
-                    } else {
-                        e.printStackTrace();
-                        ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
-                            @Override
-                            public void done(ParseUser user, ParseException e) {
-                                if (user != null) {
-                                    loginSuccessful();
-                                } else {
-                                    e.printStackTrace();
-                                    Log.e(TAG, "Login failed: " + e.getMessage());
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-
+            Log.d(TAG, "Email: " + mEmail + "; Password: " + mPassword);
             try {
-                Thread.sleep(10000L);
-            } catch (InterruptedException e) {
+                newUser.signUp();
+            } catch (ParseException e) {
                 e.printStackTrace();
+
+                if(e.getCode() == ParseException.ACCOUNT_ALREADY_LINKED) {
+                    try {
+                        ParseUser.logIn(mEmail, mPassword);
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                        Log.e(TAG, "Login failed: " + e.getMessage());
+                    }
+                } else {
+                    Log.e(TAG, "Login failed: " + e.getMessage());
+                }
+            }
+            UserSession.loggedInUser = ParseUser.getCurrentUser();
+            if (UserSession.loggedInUser != null) {
+                Log.d(TAG, "Logged in successfully: " + UserSession.loggedInUser.getEmail());
+                mHandler.obtainMessage(0, "LoggedInUser: " + UserSession.loggedInUser.getEmail()).sendToTarget();
             }
 
-            return loggedInUser != null;
-        }
-
-        private void loginSuccessful() {
-            loggedInUser = ParseUser.getCurrentUser();
-            Toast.makeText(getApplicationContext(), "LoggedInUser: " + loggedInUser.toString(), Toast.LENGTH_SHORT).show();
+            return UserSession.loggedInUser != null;
         }
 
         @Override
