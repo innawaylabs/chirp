@@ -15,6 +15,8 @@ import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.adapter.ChirpsListAdapter;
 import com.parse.ParseObject;
 
+import java.util.ArrayList;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -23,9 +25,7 @@ import com.parse.ParseObject;
  */
 public class ChirpsFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -60,6 +60,9 @@ public class ChirpsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chirps_list, container, false);
 
+        if (UserSession.chirpsList == null) {
+            UserSession.chirpsList = new ArrayList<ParseObject>();
+        }
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -90,15 +93,5 @@ public class ChirpsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(ParseObject item);
     }
 }

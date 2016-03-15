@@ -5,18 +5,19 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -31,38 +32,42 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
-import com.mandalalabs.chirp.adapter.NeighborsListAdapter;
-import com.mandalalabs.chirp.fragment.ChirpsFragment;
-import com.mandalalabs.chirp.fragment.NeighborsFragment;
+import com.mandalalabs.chirp.adapter.ChirpFragmentPagerAdapter;
+import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
+import com.mandalalabs.chirp.fragment.ProfileFragment;
 import com.mandalalabs.chirp.utils.Constants;
 import com.mandalalabs.chirp.utils.PermissionUtils;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ChatRoomActivity extends AppCompatActivity implements LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        NeighborsFragment.OnListFragmentInteractionListener,
-        ChirpsFragment.OnListFragmentInteractionListener {
+        OnListFragmentInteractionListener,
+        ProfileFragment.OnFragmentInteractionListener {
     private static final String TAG = Constants.LOG_TAG;
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 100;
     private static final int REQUEST_CHECK_SETTINGS = 1000;
-    private RecyclerView rvNeighbors;
+    ChirpFragmentPagerAdapter chirpFragmentPagerAdapter;
+    ViewPager vpViewPager;
+    PagerSlidingTabStrip tsTabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        TextView tvUser = (TextView) findViewById(R.id.userDetails);
-        tvUser.setText(UserSession.loggedInUser == null ? "NULL USER" : UserSession.loggedInUser.getUsername());
+        chirpFragmentPagerAdapter = new ChirpFragmentPagerAdapter(getSupportFragmentManager());
+        vpViewPager = (ViewPager) findViewById(R.id.viewpager);
+        vpViewPager.setAdapter(chirpFragmentPagerAdapter);
+
+        tsTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tsTabStrip.setViewPager(vpViewPager);
+
+        Log.d(TAG, (UserSession.loggedInUser == null) ? "NULL USER" : UserSession.loggedInUser.getUsername());
         Toast.makeText(ChatRoomActivity.this, "Welcome to the chat room!!!", Toast.LENGTH_SHORT).show();
 
         UserSession.locationRequest = new LocationRequest();
@@ -115,18 +120,6 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
                 }
             }
         });
-
-        rvNeighbors = (RecyclerView) findViewById(R.id.rvNeighbors);
-
-        if (UserSession.neighborsList == null) {
-            UserSession.neighborsList = new ArrayList<ParseObject>();
-        }
-        // Create adapter passing in the sample user data
-        NeighborsListAdapter adapter = new NeighborsListAdapter(UserSession.neighborsList, this);
-        // Attach the adapter to the recyclerview to populate items
-        rvNeighbors.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvNeighbors.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -143,7 +136,6 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         Log.d(TAG, "Location update received: " + location.toString());
         UserSession.currentLocation = location;
         transmitUserLocation(location);
-        setLocationText(UserSession.currentLocation);
     }
 
     private void transmitUserLocation(Location location) {
@@ -243,17 +235,7 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         Log.d(TAG, "Last known location: " + UserSession.lastKnownLocation);
         if (UserSession.lastKnownLocation != null) {
             Log.d(TAG, "Known last location: " + UserSession.lastKnownLocation.toString());
-            setLocationText(UserSession.lastKnownLocation);
         }
-    }
-
-    private void setLocationText(Location userLocation) {
-        TextView tvUserLocation = (TextView) findViewById(R.id.userLocation);
-        tvUserLocation.setText(
-                (userLocation == null) ?
-                        getResources().getString(R.string.no_clue_where_you_are) :
-                        "Lat: " + userLocation.getLatitude() + "; Long: " + userLocation.getLongitude()
-        );
     }
 
     @Override
@@ -266,32 +248,17 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         Log.e(TAG, "Connection attempt to LocationServices FAILED with error: " + connectionResult.getErrorMessage());
     }
 
-    public void getNeighbors(View view) {
-        Location userLocation = (UserSession.currentLocation == null ? UserSession.lastKnownLocation : UserSession.currentLocation);
+    @Override
+    public void onListFragmentInteraction(ParseObject item) {
 
-        if (userLocation != null) {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
-            query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 1.0);
-            query.setLimit(10);
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> objects, ParseException e) {
-                    UserSession.neighborsList.addAll(objects);
-                    Log.d(TAG, "List of neighboring users: size = " + objects.size());
-                    for (ParseObject object: objects) {
-                        ParseGeoPoint userLocation = (ParseGeoPoint) object.get(Constants.LOCATION_KEY);
-                        Log.d(TAG, "User ID:" + object.get("userId") + "; Location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
+    }
 
+    public void onChirp(View view) {
 
-                    }
-                    rvNeighbors.getAdapter().notifyDataSetChanged();
-                }
-            });
-        }
     }
 
     @Override
-    public void onListFragmentInteraction(ParseObject item) {
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }

@@ -1,11 +1,13 @@
 package com.mandalalabs.chirp.fragment;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,15 @@ import android.view.ViewGroup;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.adapter.NeighborsListAdapter;
+import com.mandalalabs.chirp.utils.Constants;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -21,13 +31,14 @@ import com.parse.ParseObject;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class NeighborsFragment extends Fragment {
+public class NeighborsFragment extends Fragment implements OnListFragmentInteractionListener {
 
-    // TODO: Customize parameter argument names
+    private static final String TAG = Constants.LOG_TAG;
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private RecyclerView rvNeighbors;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -36,7 +47,6 @@ public class NeighborsFragment extends Fragment {
     public NeighborsFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static NeighborsFragment newInstance(int columnCount) {
         NeighborsFragment fragment = new NeighborsFragment();
@@ -53,12 +63,18 @@ public class NeighborsFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        getNeighbors();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_neighbors_list, container, false);
+
+        if (UserSession.neighborsList == null) {
+            UserSession.neighborsList = new ArrayList<ParseObject>();
+        }
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -71,9 +87,33 @@ public class NeighborsFragment extends Fragment {
             }
             recyclerView.setAdapter(new NeighborsListAdapter(UserSession.neighborsList, mListener));
         }
+
         return view;
     }
 
+    public void getNeighbors() {
+        Location userLocation = (UserSession.currentLocation == null ? UserSession.lastKnownLocation : UserSession.currentLocation);
+
+        if (userLocation != null) {
+            ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
+            query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 1.0);
+            query.setLimit(10);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    UserSession.neighborsList.addAll(objects);
+                    Log.d(TAG, "List of neighboring users: size = " + objects.size());
+                    for (ParseObject object : objects) {
+                        ParseGeoPoint userLocation = (ParseGeoPoint) object.get(Constants.LOCATION_KEY);
+                        Log.d(TAG, "User ID:" + object.get("userId") + "; Location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
+
+
+                    }
+                    rvNeighbors.getAdapter().notifyDataSetChanged();
+                }
+            });
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -92,17 +132,8 @@ public class NeighborsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(ParseObject item);
+    @Override
+    public void onListFragmentInteraction(ParseObject item) {
+
     }
 }

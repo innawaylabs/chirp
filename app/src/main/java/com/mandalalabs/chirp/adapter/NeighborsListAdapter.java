@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mandalalabs.chirp.R;
-import com.mandalalabs.chirp.fragment.NeighborsFragment.OnListFragmentInteractionListener;
+import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
 import com.mandalalabs.chirp.utils.Constants;
 import com.parse.ParseObject;
 
@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link ParseObject} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdapter.ViewHolder> {
 

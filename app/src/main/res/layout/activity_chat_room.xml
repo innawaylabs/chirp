@@ -1,75 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.ChatRoomActivity">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeContainer"
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        app:pstsShouldExpand="true"
+        app:pstsTextAllCaps="true"
         android:layout_width="match_parent"
-        android:layout_height="360dp">
+        android:layout_height="48dp"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:background="@color/material_grey_100"
+        app:pstsDividerColor="@color/green"
+        app:pstsIndicatorColor="@color/red"
+        app:pstsUnderlineColor="@color/blue"
+        app:pstsTabPaddingLeftRight="14dp" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvNeighbors"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:id="@+id/userDetails"
-        android:layout_below="@id/swipeContainer" />
-
-    <TextView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textSize="18sp"
-        android:text="@string/no_clue_where_you_are"
-        android:textAlignment="center"
-        android:id="@+id/userLocation"
-        android:layout_below="@id/userDetails" />
+        android:layout_below="@id/tabs"
+        android:background="@android:color/white" />
 
-    <Button
-        android:layout_width="match_parent"
+    <!-- Pretty nice floating action button for compose tweet -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/userLocation"
-        android:onClick="getNeighbors"
-        android:text="WELCOME TO THE CHATROOM!!!"
-        android:id="@+id/button" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_action_chirp"
+        android:onClick="onChirp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button">
-        <EditText
-            android:id="@+id/etMessage"
-            android:layout_toLeftOf="@+id/btSend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/btSend"
-            android:gravity="top"
-            android:layout_weight="5"
-            android:hint="@string/message_hint"
-            android:imeOptions="actionSend"
-            android:singleLine="true" />
-
-        <Button
-            android:id="@+id/btSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|right"
-            android:paddingRight="10dp"
-            android:layout_alignParentRight="true"
-            android:text="@string/send"
-            android:textSize="18sp" >
-        </Button>
-    </LinearLayout>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

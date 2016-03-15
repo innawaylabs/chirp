@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mandalalabs.chirp.R;
-import com.mandalalabs.chirp.fragment.ChirpsFragment.OnListFragmentInteractionListener;
+import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
 import com.parse.ParseObject;
 
 import java.util.List;
