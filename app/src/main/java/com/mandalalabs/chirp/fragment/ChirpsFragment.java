@@ -1,11 +1,13 @@
 package com.mandalalabs.chirp.fragment;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,15 @@ import android.view.ViewGroup;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.adapter.ChirpsListAdapter;
+import com.mandalalabs.chirp.utils.Constants;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -25,8 +33,9 @@ import java.util.ArrayList;
  */
 public class ChirpsFragment extends Fragment {
 
+    private static final String TAG = Constants.LOG_TAG;
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
+    private RecyclerView rvChirps;
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -51,7 +60,7 @@ public class ChirpsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            // Do something with args
         }
     }
 
@@ -66,17 +75,31 @@ public class ChirpsFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new ChirpsListAdapter(UserSession.chirpsList, mListener));
+            rvChirps = (RecyclerView) view;
+            rvChirps.setLayoutManager(new LinearLayoutManager(context));
+            rvChirps.setAdapter(new ChirpsListAdapter(UserSession.chirpsList, mListener));
         }
+
+        getChirps();
         return view;
     }
 
+    private void getChirps() {
+        Log.d(TAG, "Getting chirps!!!");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_CHIRPS);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                UserSession.chirpsList.clear();
+                UserSession.chirpsList.addAll(objects);
+                Log.d(TAG, "List of chirps: size = " + objects.size());
+                for (ParseObject object : objects) {
+                    Log.d(TAG, "User ID:" + object.get(Constants.MESSAGE_KEY));
+                }
+                rvChirps.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
 
     @Override
     public void onAttach(Context context) {

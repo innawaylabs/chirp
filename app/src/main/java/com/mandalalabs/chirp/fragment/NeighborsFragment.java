@@ -95,11 +95,12 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
         Location userLocation = (UserSession.currentLocation == null ? UserSession.lastKnownLocation : UserSession.currentLocation);
 
         Log.d(TAG, "Getting neighbors!!!");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
         if (userLocation != null) {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
             query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 100.0);
-            query.setLimit(10);
-            query.findInBackground(new FindCallback<ParseObject>() {
+        }
+//        query.setLimit(10);
+        query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
                     UserSession.neighborsList.clear();
@@ -110,9 +111,8 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
                         Log.d(TAG, "User ID:" + object.get("userId") + "; Location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
                     }
                     rvNeighbors.getAdapter().notifyDataSetChanged();
-                }
-            });
-        }
+            }
+        });
     }
 
     @Override

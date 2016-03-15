@@ -15,6 +15,7 @@ public class UserSession {
     public static Location lastKnownLocation;
     public static Location currentLocation;
     public static ParseObject userLocationInfo;
+    public static ParseObject userDetails;
     public static LocationRequest locationRequest;
     public static ArrayList<ParseObject> neighborsList;
     public static ArrayList<ParseObject> chirpsList;

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
@@ -37,7 +38,7 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View neighborsView = inflater.inflate(R.layout.neighbors_list_item, parent, false);
+        View neighborsView = inflater.inflate(R.layout.fragment_neighbors, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(neighborsView);
@@ -79,6 +80,12 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
             super(convertView);
 
             ivNeighborPic = (ImageView) convertView.findViewById(R.id.ivNeighborPic);
+            ivNeighborPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(Constants.LOG_TAG, "I know that profile pic is clicked.");
+                }
+            });
             tvNeighborName = (TextView) convertView.findViewById(R.id.tvNeighborName);
         }
 

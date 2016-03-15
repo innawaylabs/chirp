@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
+import com.mandalalabs.chirp.utils.Constants;
 import com.parse.ParseObject;
 
 import java.util.List;
@@ -36,15 +37,13 @@ public class ChirpsListAdapter extends RecyclerView.Adapter<ChirpsListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(0).get("position").toString());
-        holder.mContentView.setText(mValues.get(0).get("position").toString());
+        holder.mIdView.setText(holder.mItem.get(Constants.SENDER_KEY).toString());
+        holder.mContentView.setText(holder.mItem.get(Constants.MESSAGE_KEY).toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
             }

@@ -42,6 +42,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
+import java.util.Random;
 
 public class ChatRoomActivity extends AppCompatActivity implements LocationListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -77,10 +78,12 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         }
         Toast.makeText(ChatRoomActivity.this, "Welcome to the chat room!!!", Toast.LENGTH_SHORT).show();
 
-        UserSession.locationRequest = new LocationRequest();
-        UserSession.locationRequest.setInterval(10000);
-        UserSession.locationRequest.setFastestInterval(5000);
-        UserSession.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (UserSession.locationRequest == null) {
+            UserSession.locationRequest = new LocationRequest();
+            UserSession.locationRequest.setInterval(10000);
+            UserSession.locationRequest.setFastestInterval(5000);
+            UserSession.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
 
         if (UserSession.googleApiClient == null) {
             UserSession.googleApiClient = new GoogleApiClient.Builder(this)
@@ -139,8 +142,30 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                if (objects.size() == 1) {
+                if (objects.size() >= 1) {
                     UserSession.userLocationInfo = objects.get(0);
+                }
+            }
+        });
+        query = ParseQuery.getQuery(Constants.TABLE_USER_DETAILS);
+        query.whereEqualTo(Constants.USER_ID_KEY, user.getObjectId());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (objects.size() == 0) {
+                    UserSession.userDetails = new ParseObject(Constants.TABLE_USER_DETAILS);
+                    UserSession.userDetails.put(Constants.USER_ID_KEY, UserSession.loggedInUser.getObjectId());
+
+                    if (UserSession.loggedInUser.getUsername() != null) {
+                        UserSession.userDetails.put(Constants.USER_NAME_KEY, UserSession.loggedInUser.getUsername());
+                    }
+                    try {
+                        UserSession.userDetails.save();
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                } else if (objects.size() == 1) {
+                    UserSession.userDetails = objects.get(0);
                 }
             }
         });
@@ -270,11 +295,15 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
     }
 
     public void onChirp(View view) {
+        ParseObject chirp = new ParseObject(Constants.TABLE_CHIRPS);
 
+        chirp.put(Constants.SENDER_KEY, UserSession.loggedInUser);
+        chirp.put(Constants.MESSAGE_KEY, "Random chirp " + new Random().nextInt(1000));
+        chirp.saveInBackground();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
+        Toast.makeText(ChatRoomActivity.this, "Profile clicked", Toast.LENGTH_SHORT).show();
     }
 }
