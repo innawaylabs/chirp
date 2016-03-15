@@ -63,8 +63,6 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-
-        getNeighbors();
     }
 
     @Override
@@ -72,6 +70,7 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_neighbors_list, container, false);
 
+        Log.i(TAG, "onCreateView()");
         if (UserSession.neighborsList == null) {
             UserSession.neighborsList = new ArrayList<ParseObject>();
         }
@@ -79,35 +78,36 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            rvNeighbors = (RecyclerView) view;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                rvNeighbors.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                rvNeighbors.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new NeighborsListAdapter(UserSession.neighborsList, mListener));
+            rvNeighbors.setAdapter(new NeighborsListAdapter(UserSession.neighborsList, mListener));
         }
 
+        getNeighbors();
         return view;
     }
 
     public void getNeighbors() {
         Location userLocation = (UserSession.currentLocation == null ? UserSession.lastKnownLocation : UserSession.currentLocation);
 
+        Log.d(TAG, "Getting neighbors!!!");
         if (userLocation != null) {
             ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
-            query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 1.0);
+            query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 100.0);
             query.setLimit(10);
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
+                    UserSession.neighborsList.clear();
                     UserSession.neighborsList.addAll(objects);
                     Log.d(TAG, "List of neighboring users: size = " + objects.size());
                     for (ParseObject object : objects) {
                         ParseGeoPoint userLocation = (ParseGeoPoint) object.get(Constants.LOCATION_KEY);
                         Log.d(TAG, "User ID:" + object.get("userId") + "; Location: " + userLocation.getLatitude() + ", " + userLocation.getLongitude());
-
-
                     }
                     rvNeighbors.getAdapter().notifyDataSetChanged();
                 }

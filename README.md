@@ -12,11 +12,11 @@
 * [x] Associate last known or current location with each user
 * [x] Get all other users around current user (within certain radius)
 * [ ] Virtual room: Send broadcast message to server
-  * [ ] Client UI - 1h
+  * [x] Client UI - 1h
   * [ ] Server to receive the message - 2h
   * [ ] Comms to Server - 3h
 * [ ] Virtual room: Poll messages from server
-  * [ ] Client UI - 3h
+  * [x] Client UI - 3h
   * [ ] Server's REST API for polling - 2h
   * [ ] Polling from Server (with count and max_id/since_id params) - 2h 
 * Interest based filtering

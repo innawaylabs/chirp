@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -28,7 +27,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
@@ -36,11 +34,14 @@ import com.mandalalabs.chirp.adapter.ChirpFragmentPagerAdapter;
 import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
 import com.mandalalabs.chirp.fragment.ProfileFragment;
 import com.mandalalabs.chirp.utils.Constants;
-import com.mandalalabs.chirp.utils.PermissionUtils;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ChatRoomActivity extends AppCompatActivity implements LocationListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -62,17 +63,23 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
 
         chirpFragmentPagerAdapter = new ChirpFragmentPagerAdapter(getSupportFragmentManager());
         vpViewPager = (ViewPager) findViewById(R.id.viewpager);
-        vpViewPager.setAdapter(chirpFragmentPagerAdapter);
+        if (vpViewPager != null)
+            vpViewPager.setAdapter(chirpFragmentPagerAdapter);
 
         tsTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tsTabStrip.setViewPager(vpViewPager);
+        if (tsTabStrip != null)
+            tsTabStrip.setViewPager(vpViewPager);
 
-        Log.d(TAG, (UserSession.loggedInUser == null) ? "NULL USER" : UserSession.loggedInUser.getUsername());
+        if (UserSession.loggedInUser == null) {
+            Log.d(TAG, "User: NULL");
+        } else {
+            Log.d(TAG, "User: " + UserSession.loggedInUser.getUsername());
+        }
         Toast.makeText(ChatRoomActivity.this, "Welcome to the chat room!!!", Toast.LENGTH_SHORT).show();
 
         UserSession.locationRequest = new LocationRequest();
-        UserSession.locationRequest.setInterval(1000);
-        UserSession.locationRequest.setFastestInterval(500);
+        UserSession.locationRequest.setInterval(10000);
+        UserSession.locationRequest.setFastestInterval(5000);
         UserSession.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (UserSession.googleApiClient == null) {
@@ -94,29 +101,46 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
             @Override
             public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
                 final Status status = locationSettingsResult.getStatus();
-                final LocationSettingsStates states = locationSettingsResult.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied. The client can
-                        // initialize location requests here.
+                        startLocationUpdates();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied, but this can be fixed
-                        // by showing the user a dialog.
                         try {
+                            Log.e(TAG, "Need resolution of Location settings!!!");
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
                             status.startResolutionForResult(
                                     ChatRoomActivity.this,
                                     REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
+                            e.printStackTrace();
                         }
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
+                        // TODO: Switch to offline more
+                        Log.w(TAG, "Location settings unavailable. Switching to offline mode!!!");
                         break;
+                }
+            }
+        });
+
+        initUser();
+    }
+
+    private void initUser() {
+        ParseUser user = UserSession.loggedInUser;
+        if (user == null) {
+            Log.w(TAG, "Failed to initialize user because it's null");
+            return;
+        }
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
+        query.whereEqualTo(Constants.USER_ID_KEY, user.getObjectId());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (objects.size() == 1) {
+                    UserSession.userLocationInfo = objects.get(0);
                 }
             }
         });
@@ -128,6 +152,7 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
 
         if (requestCode == REQUEST_CHECK_SETTINGS) {
             Log.d(TAG, "Result for check settings: " + resultCode);
+            startLocationUpdates();
         }
     }
 
@@ -142,8 +167,9 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         if (location != null) {
             if (UserSession.userLocationInfo == null) {
                 UserSession.userLocationInfo = new ParseObject(Constants.TABLE_USER_LOCATION_INFO);
-                UserSession.userLocationInfo.put("userId", UserSession.loggedInUser.getObjectId());
+                UserSession.userLocationInfo.put(Constants.USER_ID_KEY, UserSession.loggedInUser.getObjectId());
             }
+
             ParseGeoPoint userGeoLocation = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
             UserSession.userLocationInfo.put(Constants.LOCATION_KEY, userGeoLocation);
             UserSession.userLocationInfo.saveInBackground();
@@ -166,15 +192,10 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
 
     private void startLocationUpdates() {
         Log.d(TAG, "startLocationUpdates()");
-        String[] locationPermissions = new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-        ArrayList<String> missingPermissions = PermissionUtils.getMissingPermissions(
-                getApplicationContext(), locationPermissions);
-        if (missingPermissions.isEmpty() == false) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(locationPermissions, REQUEST_CODE_LOCATION_PERMISSION);
+                requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION} , REQUEST_CODE_LOCATION_PERMISSION);
             }
             return;
         }
@@ -216,19 +237,14 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "Connected to LocationServices");
-        String[] locationPermissions = new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-        ArrayList<String> missingPermissions = PermissionUtils.getMissingPermissions(
-                getApplicationContext(), locationPermissions);
-        if (missingPermissions.isEmpty() == false) {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(locationPermissions, REQUEST_CODE_LOCATION_PERMISSION);
+                requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION} , REQUEST_CODE_LOCATION_PERMISSION);
             }
             return;
         }
-
         UserSession.lastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(
                 UserSession.googleApiClient);
 
