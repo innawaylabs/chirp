@@ -5,25 +5,26 @@
 ## User Stories
 
 *Required User Stories:*
-* [x] Login with Facebook - 3h
+* [x] Login with Facebook
 * [x] Login with Twitter
 * [x] Sign up and Sign in
 * [x] Get location updates
 * [x] Associate last known or current location with each user
 * [x] Get all other users around current user (within certain radius)
 * [x] Virtual room: Send broadcast message to server
-  * [x] Client UI - 1h
-  * [x] Server to receive the message - 2h
-  * [x] Comms to Server - 3h
+  * [x] Client UI
+  * [x] Server to receive the message
+  * [x] Comms to Server
 * [x] Virtual room: Poll messages from server
-  * [x] Client UI - 3h
-  * [x] Server's REST API for polling - 2h
-  * [x] Polling from Server (with count and max_id/since_id params) - 2h 
+  * [x] Client UI
+  * [x] Server's REST API for polling
+  * [x] Polling from Server (with count and max_id/since_id params) 
 
 *Optional User Stories:*
+* [ ] Get profile info and populate on profile page 
 * Interest based filtering
-  * [ ] Client UI for setting filters (all in one group) - 4h
-  * [ ] Apply filters while polling the server - 1h
+  * [ ] Client UI for setting filters (all in one group)
+  * [ ] Apply filters while polling the server
 * [ ] Sign-up email activation
 * [ ] Message ID based rooms for active discussion of interested parties
 * [ ] Vote up and Vote down to rate the messages
