@@ -97,9 +97,9 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
         Log.d(TAG, "Getting neighbors!!!");
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_USER_LOCATION_INFO);
         if (userLocation != null) {
-            query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 100.0);
+            query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 1.0);
         }
-//        query.setLimit(10);
+        query.setLimit(1000);
         query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {

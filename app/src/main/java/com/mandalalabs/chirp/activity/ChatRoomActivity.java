@@ -298,7 +298,7 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         ParseObject chirp = new ParseObject(Constants.TABLE_CHIRPS);
 
         chirp.put(Constants.SENDER_KEY, UserSession.loggedInUser);
-        chirp.put(Constants.MESSAGE_KEY, "Random chirp " + new Random().nextInt(1000));
+        chirp.put(Constants.MESSAGE_KEY, UserSession.loggedInUser.getUsername() + "'s Random chirp " + new Random().nextInt(1000));
         chirp.saveInBackground();
     }
 

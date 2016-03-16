@@ -1,15 +1,20 @@
 package com.mandalalabs.chirp.adapter;
 
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mandalalabs.chirp.R;
+import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
 import com.mandalalabs.chirp.utils.Constants;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -37,8 +42,23 @@ public class ChirpsListAdapter extends RecyclerView.Adapter<ChirpsListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(holder.mItem.get(Constants.SENDER_KEY).toString());
-        holder.mContentView.setText(holder.mItem.get(Constants.MESSAGE_KEY).toString());
+
+        ParseUser sender = holder.mItem.getParseUser(Constants.SENDER_KEY);
+        final boolean isMe = sender != null && sender.getObjectId().equals(UserSession.loggedInUser.getObjectId());
+        // Show-hide image based on the logged-in user.
+        // Display the profile image to the right for our user, left for other users.
+        if (isMe) {
+            holder.mImageMe.setVisibility(View.VISIBLE);
+            holder.mImageOther.setVisibility(View.GONE);
+            holder.mBody.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+        } else {
+            holder.mImageOther.setVisibility(View.VISIBLE);
+            holder.mImageMe.setVisibility(View.GONE);
+            holder.mBody.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+        }
+        final ImageView profileView = isMe ? holder.mImageMe : holder.mImageOther;
+//        Picasso.with(getContext()).load(getProfileUrl(message.getUserId())).into(profileView);
+        holder.mBody.setText(holder.mItem.getString(Constants.MESSAGE_KEY));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,20 +77,22 @@ public class ChirpsListAdapter extends RecyclerView.Adapter<ChirpsListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final ImageView mImageOther;
+        public final ImageView mImageMe;
+        public final TextView mBody;
         public ParseObject mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mImageOther = (ImageView) view.findViewById(R.id.ivProfileOther);
+            mImageMe = (ImageView) view.findViewById(R.id.ivProfileMe);
+            mBody = (TextView) view.findViewById(R.id.tvBody);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mBody.getText() + "'";
         }
     }
 }
