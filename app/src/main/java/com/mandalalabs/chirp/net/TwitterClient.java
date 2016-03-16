@@ -15,7 +15,7 @@ import com.mandalalabs.chirp.utils.Constants;
 public class TwitterClient extends OAuthBaseClient {
     private static final String TAG = Constants.LOG_TAG;
     public static final Class<? extends Api> REST_API_CLASS = TwitterApi.SSL.class;
-    public static final String REST_CALLBACK_URL = "oauth://chirp";
+    public static final String REST_CALLBACK_URL = "oauth://chirp_live";
 
     public TwitterClient(Context context) {
         super(context,

@@ -43,7 +43,6 @@ import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.utils.Constants;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseUser;

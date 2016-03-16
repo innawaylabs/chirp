@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -172,6 +174,13 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -305,5 +314,15 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
     @Override
     public void onFragmentInteraction(Uri uri) {
         Toast.makeText(ChatRoomActivity.this, "Profile clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onComposeClick(MenuItem item) {
+        onChirp(null);
+    }
+
+    public void onProfileClick(MenuItem item) {
+        Intent intent = new Intent(ChatRoomActivity.this, ProfileActivity.class);
+        intent.putExtra(Constants.USER_ID_KEY, UserSession.loggedInUser.getObjectId());
+        startActivity(intent);
     }
 }

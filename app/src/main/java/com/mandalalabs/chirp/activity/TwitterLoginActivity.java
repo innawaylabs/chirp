@@ -6,8 +6,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActivity;
+import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.net.TwitterClient;
 import com.mandalalabs.chirp.utils.Constants;
+import com.parse.LogInCallback;
+import com.parse.ParseAnonymousUtils;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 public class TwitterLoginActivity extends OAuthLoginActivity<TwitterClient> {
     private static final String TAG = Constants.LOG_TAG;
@@ -32,8 +37,18 @@ public class TwitterLoginActivity extends OAuthLoginActivity<TwitterClient> {
         Log.d(TAG, "Twitter login Successful!!");
         Toast.makeText(TwitterLoginActivity.this, "Twitter login successful!!!", Toast.LENGTH_LONG).show();
         loggedInWithTwitter = true;
-        Intent i = new Intent(this, ChatRoomActivity.class);
-        startActivity(i);
+        ParseAnonymousUtils.logIn(new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Anonymous login failed: ", e);
+                } else {
+                    UserSession.loggedInUser = user;
+                    Intent i = new Intent(TwitterLoginActivity.this, ChatRoomActivity.class);
+                    startActivity(i);
+                }
+            }
+        });
     }
 
     @Override
