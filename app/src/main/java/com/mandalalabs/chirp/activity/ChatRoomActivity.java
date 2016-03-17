@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -43,6 +44,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 import java.util.Random;
@@ -296,11 +298,18 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
     }
 
     public void onChirp(View view) {
+        TextView tvChirp = (TextView) findViewById(R.id.etChirp);
+        if (tvChirp.getText().toString().isEmpty()) {
+            Toast.makeText(ChatRoomActivity.this, "Please chirp what's on your mind...", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ParseObject chirp = new ParseObject(Constants.TABLE_CHIRPS);
 
         chirp.put(Constants.SENDER_KEY, UserSession.loggedInUser);
-        chirp.put(Constants.MESSAGE_KEY, UserSession.loggedInUser.getUsername() + "'s Random chirp " + new Random().nextInt(1000));
+        chirp.put(Constants.MESSAGE_KEY, tvChirp.getText().toString());// UserSession.loggedInUser.getUsername() + "'s Random chirp " + new Random().nextInt(1000));
         chirp.saveInBackground();
+        tvChirp.setText("");
+        vpViewPager.setCurrentItem(0);
     }
 
     @Override

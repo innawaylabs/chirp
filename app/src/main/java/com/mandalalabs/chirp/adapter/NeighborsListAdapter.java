@@ -1,6 +1,8 @@
 package com.mandalalabs.chirp.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import com.mandalalabs.chirp.R;
 import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
 import com.mandalalabs.chirp.utils.Constants;
+import com.mandalalabs.chirp.utils.Contact;
 import com.parse.ParseObject;
 
 import java.util.List;
@@ -49,6 +52,8 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ParseObject neighbor = neighbors.get(position);
 
+        Contact contact = getRandomContact();
+        holder.ivNeighborPic.setImageResource(contact.getThumbnailDrawable());
 //        Glide.with(context)
 //                .load("http://some.profile.pic/url")
 //                .asBitmap()
@@ -64,7 +69,24 @@ public class NeighborsListAdapter extends RecyclerView.Adapter<NeighborsListAdap
 //                context.startActivity(intent);
             }
         });
-        holder.tvNeighborName.setText(neighbor.get("userId").toString());
+        holder.tvNeighborName.setText(contact.getName());  // neighbor.get("firstName") != null ? neighbor.get("firstName").toString() : "Next door neighbor");
+    }
+
+    // Returns a random contact
+    public Contact getRandomContact() {
+
+        Resources resources = context.getResources();
+
+        TypedArray contactNames = resources.obtainTypedArray(R.array.contact_names);
+        int name = (int) (Math.random() * contactNames.length());
+
+        TypedArray contactThumbnails = resources.obtainTypedArray(R.array.contact_thumbnails);
+        int thumbnail = (int) (Math.random() * contactThumbnails.length());
+
+        TypedArray contactNumbers = resources.obtainTypedArray(R.array.contact_numbers);
+        int number = (int) (Math.random() * contactNumbers.length());
+
+        return new Contact(contactNames.getString(name), contactThumbnails.getResourceId(thumbnail, R.drawable.contact_one), contactNumbers.getString(number));
     }
 
     @Override

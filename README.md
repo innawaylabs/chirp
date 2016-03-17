@@ -59,7 +59,9 @@
 Wireframes: <a href="https://popapp.in/w/projects/56d7933afc8bc907550fc94c/mockups">here</a>.
 
 *Sprint 2 current status:*
-![Video Walkthrough](sprint2_demo.gif)
+![Sign in flow - Video Walkthrough](sprint2_demo_sign_in.gif)
+![Core functionality - Video Walkthrough](sprint2_demo.gif)
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

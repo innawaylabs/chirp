@@ -99,7 +99,7 @@ public class NeighborsFragment extends Fragment implements OnListFragmentInterac
         if (userLocation != null) {
             query.whereWithinMiles(Constants.LOCATION_KEY, new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude()), 1.0);
         }
-        query.setLimit(1000);
+        query.setLimit(10);
         query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {

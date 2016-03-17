@@ -4,4 +4,36 @@
     android:layout_height="match_parent"
     tools:context="com.mandalalabs.chirp.fragment.ProfileFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivProfilePic"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal|top"
+            android:src="@drawable/contact_seven" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivProfilePic"
+            android:layout_gravity="center_horizontal"
+            android:text="Jumping Jack"
+            android:textAlignment="center"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvEmailId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvUsername"
+            android:layout_gravity="center_horizontal"
+            android:text="ravikumar.mandala@gmail.com"
+            android:textAlignment="center"
+            android:textSize="18dp" />
+    </RelativeLayout>
 </FrameLayout>

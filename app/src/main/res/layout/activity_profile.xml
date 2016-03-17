@@ -5,11 +5,19 @@
     android:layout_height="match_parent"
     tools:context="com.mandalalabs.chirp.activity.ProfileActivity">
 
+    <ImageView
+        android:id="@+id/ivProfilePic"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/contact_seven" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         android:orientation="horizontal"
+        android:layout_below="@id/ivProfilePic"
         android:id="@+id/llCredentials">
         <LinearLayout
             android:layout_width="0dp"
@@ -21,13 +29,13 @@
                 android:layout_height="wrap_content"
                 android:text="User Name / e-Mail:"
                 android:textStyle="bold"
-                android:textSize="12dp"/>
+                android:textSize="12sp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="ravikumar.mandala@gmail.com"
-                android:textSize="16dp"
+                android:text="ravi.mandala@gmail.com"
+                android:textSize="18sp"
                 android:singleLine="true"
                 android:id="@+id/tvUsername"/>
         </LinearLayout>
@@ -44,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         android:id="@+id/llUserName"
         android:layout_below="@id/llCredentials" >
         <EditText
@@ -79,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         android:id="@+id/llOtherDetails"
         android:layout_below="@id/llUserName" >
         <EditText
@@ -126,8 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/etAboutMe"
-        android:orientation="horizontal"
-        android:layout_margin="16dp">
+        android:orientation="horizontal">
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
