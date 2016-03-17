@@ -22,23 +22,11 @@
 
 *Optional User Stories:*
 * [x] Get profile info and populate on profile page 
-* Interest based filtering
+* [ ] Interest based filtering
   * [ ] Client UI for setting filters (all in one group)
   * [ ] Apply filters while polling the server
-* [ ] Sign-up email activation
 * [ ] Message ID based rooms for active discussion of interested parties
 * [ ] Vote up and Vote down to rate the messages
-* [ ] Implicit Intent to share stuff on this app
-* [ ] Fluid and intuitive UX
-* [ ] Private conversation with user from the profile page or from one of the rooms
-* [ ] Option to enable/disable location tracking in the app
-* [ ] Notifications on active app
-* [ ] Notifications on a backgrounded/closed app
-* [ ] Enable/Disable pop-up notifications
-* [ ] Need for email activation 
-* [ ] Use butterknife; Glide with customizations; Parcelable
-
-*Bonus User Stories:*
 * [ ] Talk with at least one IoT machine (like turn on a thermostat/coffee machine saying "hi")
 * [ ] Dynamic groups with passphrase
 * [ ] Screen lock with a PIN/Pattern/Fingerprint
@@ -59,8 +47,12 @@
 Wireframes: <a href="https://popapp.in/w/projects/56d7933afc8bc907550fc94c/mockups">here</a>.
 
 *Sprint 2 current status:*
-![Sign in flow - Video Walkthrough](sprint2_demo_sign_in.gif)
+
+
 ![Core functionality - Video Walkthrough](sprint2_demo.gif)
+
+
+![Sign in flow - Video Walkthrough](sprint2_demo_sign_in.gif)
 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
