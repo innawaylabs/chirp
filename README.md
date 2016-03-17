@@ -21,7 +21,7 @@
   * [x] Polling from Server (with count and max_id/since_id params) 
 
 *Optional User Stories:*
-* [ ] Get profile info and populate on profile page 
+* [x] Get profile info and populate on profile page 
 * Interest based filtering
   * [ ] Client UI for setting filters (all in one group)
   * [ ] Apply filters while polling the server
@@ -58,8 +58,8 @@
 
 Wireframes: <a href="https://popapp.in/w/projects/56d7933afc8bc907550fc94c/mockups">here</a>.
 
-*Last stable status:*
-![Video Walkthrough](demo.gif)
+*Sprint 2 current status:*
+![Video Walkthrough](sprint2_demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
