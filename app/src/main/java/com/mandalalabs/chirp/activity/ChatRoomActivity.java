@@ -35,6 +35,7 @@ import com.mandalalabs.chirp.UserSession;
 import com.mandalalabs.chirp.adapter.ChirpFragmentPagerAdapter;
 import com.mandalalabs.chirp.fragment.OnListFragmentInteractionListener;
 import com.mandalalabs.chirp.fragment.ProfileFragment;
+import com.mandalalabs.chirp.model.UserDetails;
 import com.mandalalabs.chirp.utils.Constants;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -149,23 +150,14 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
                 }
             }
         });
-        query = ParseQuery.getQuery(Constants.TABLE_USER_DETAILS);
-        query.whereEqualTo(Constants.USER_ID_KEY, user.getObjectId());
-        query.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<UserDetails> queryUserDetails = ParseQuery.getQuery(UserDetails.class);
+        queryUserDetails.whereEqualTo(Constants.USER_ID_KEY, user.getObjectId());
+        queryUserDetails.findInBackground(new FindCallback<UserDetails>() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
+            public void done(List<UserDetails> objects, ParseException e) {
                 if (objects.size() == 0) {
-                    UserSession.userDetails = new ParseObject(Constants.TABLE_USER_DETAILS);
-                    UserSession.userDetails.put(Constants.USER_ID_KEY, UserSession.loggedInUser.getObjectId());
-
-                    if (UserSession.loggedInUser.getUsername() != null) {
-                        UserSession.userDetails.put(Constants.USER_NAME_KEY, UserSession.loggedInUser.getUsername());
-                    }
-                    try {
-                        UserSession.userDetails.save();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
+                    UserSession.userDetails = new UserDetails();
+                    UserSession.userDetails.saveInBackground();
                 } else if (objects.size() == 1) {
                     UserSession.userDetails = objects.get(0);
                 }

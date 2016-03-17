@@ -1,4 +1,4 @@
-package com.mandalalabs.chirp;
+package com.mandalalabs.chirp.model;
 
 import com.parse.ParseObject;
 

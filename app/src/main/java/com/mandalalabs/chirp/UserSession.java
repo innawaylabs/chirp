@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
+import com.mandalalabs.chirp.model.UserDetails;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -15,7 +16,7 @@ public class UserSession {
     public static Location lastKnownLocation;
     public static Location currentLocation;
     public static ParseObject userLocationInfo;
-    public static ParseObject userDetails;
+    public static UserDetails userDetails;
     public static LocationRequest locationRequest;
     public static ArrayList<ParseObject> neighborsList;
     public static ArrayList<ParseObject> chirpsList;
