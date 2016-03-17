@@ -23,6 +23,12 @@
     <string name="send">Send</string>
     <string name="profile_neighbor">Neighbor Pic</string>
 
+    <string name="profile_me">My Profile Pic</string>
+    <string name="profile_other">Others profile pic</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btnSave">Save</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="reset_password">Reset Password</string>
 </resources>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mandalalabs.chirp.activity.ProfileActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        android:id="@+id/llCredentials">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name / e-Mail:"
+                android:textStyle="bold"
+                android:textSize="12dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="ravikumar.mandala@gmail.com"
+                android:textSize="16dp"
+                android:singleLine="true"
+                android:id="@+id/tvUsername"/>
+        </LinearLayout>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:textSize="16dp"
+            android:lines="2"
+            android:onClick="onPasswordReset"
+            android:text="@string/reset_password" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:id="@+id/llUserName"
+        android:layout_below="@id/llCredentials" >
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:hint="First Name"
+            android:layout_weight="3"
+            android:layout_margin="4dp"
+            android:singleLine="true"
+            android:id="@+id/etFirstName" />
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:hint="Middle Name"
+            android:layout_weight="2"
+            android:layout_margin="4dp"
+            android:singleLine="true"
+            android:id="@+id/etMiddleName" />
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:hint="Last Name"
+            android:layout_weight="3"
+            android:layout_margin="4dp"
+            android:singleLine="true"
+            android:id="@+id/etLastName" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:id="@+id/llOtherDetails"
+        android:layout_below="@id/llUserName" >
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:hint="Contact Number"
+            android:layout_weight="3"
+            android:layout_margin="4dp"
+            android:singleLine="true"
+            android:phoneNumber="true"
+            android:id="@+id/etContactNumber" />
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:hint="Gender"
+            android:layout_weight="2"
+            android:layout_margin="4dp"
+            android:singleLine="true"
+            android:id="@+id/etGender" />
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/etDateOfBirth"
+            android:hint="Date of Birth"
+            android:textSize="16dp"
+            android:layout_weight="3"
+            android:layout_margin="4dp"
+            android:onClick="showDatePickerDialog"
+            android:editable="false"/>
+    </LinearLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="3"
+        android:textSize="16dp"
+        android:layout_margin="20dp"
+        android:hint="About Me..."
+        android:gravity="top"
+        android:id="@+id/etAboutMe"
+        android:layout_below="@id/llOtherDetails" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etAboutMe"
+        android:orientation="horizontal"
+        android:layout_margin="16dp">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onCancel"
+            android:text="@string/btnCancel"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onSave"
+            android:text="@string/btnSave" />
+    </LinearLayout>
+</RelativeLayout>

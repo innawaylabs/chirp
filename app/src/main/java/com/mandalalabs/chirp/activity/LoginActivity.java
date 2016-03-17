@@ -3,7 +3,6 @@ package com.mandalalabs.chirp.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -142,6 +140,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if (ParseUser.getCurrentUser() != null) {
+            logInAsCurrentUser();
+        }
     }
 
     @Override
@@ -248,12 +250,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        //TODO: Replace this with better logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+        //TODO: Replace this with better logic
         return password.length() > 4;
     }
 
@@ -343,16 +345,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (e != null) {
                     Log.e(TAG, "Anonymous login failed: ", e);
                 } else {
-                    UserSession.loggedInUser = ParseUser.getCurrentUser();
-                    Log.d(TAG, "Logged in successfully: " + UserSession.loggedInUser.toString());
-                    Toast.makeText(getApplicationContext(),
-                            "LoggedInUser: " + UserSession.loggedInUser.getEmail(), Toast.LENGTH_SHORT)
-                            .show();
-                    Intent intent = new Intent(getApplicationContext(), ChatRoomActivity.class);
-                    startActivity(intent);
+                    logInAsCurrentUser();
                 }
             }
         });
+    }
+
+    private void logInAsCurrentUser() {
+        UserSession.loggedInUser = ParseUser.getCurrentUser();
+        Log.d(TAG, "Logged in successfully: " + UserSession.loggedInUser.toString());
+        Toast.makeText(getApplicationContext(),
+                "LoggedInUser: " + UserSession.loggedInUser.getEmail(), Toast.LENGTH_SHORT)
+                .show();
+        Intent intent = new Intent(getApplicationContext(), ChatRoomActivity.class);
+        startActivity(intent);
     }
 
     private interface ProfileQuery {

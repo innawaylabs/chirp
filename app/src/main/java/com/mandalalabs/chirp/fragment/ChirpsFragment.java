@@ -1,10 +1,8 @@
 package com.mandalalabs.chirp.fragment;
 
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +16,6 @@ import com.mandalalabs.chirp.adapter.ChirpsListAdapter;
 import com.mandalalabs.chirp.utils.Constants;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -87,6 +84,7 @@ public class ChirpsFragment extends Fragment {
     private void getChirps() {
         Log.d(TAG, "Getting chirps!!!");
         ParseQuery<ParseObject> query = ParseQuery.getQuery(Constants.TABLE_CHIRPS);
+        query.setLimit(1000);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -95,6 +93,7 @@ public class ChirpsFragment extends Fragment {
                 Log.d(TAG, "List of chirps: size = " + objects.size());
                 for (ParseObject object : objects) {
                     Log.d(TAG, "User ID:" + object.get(Constants.MESSAGE_KEY));
+                    object.getParseObject(Constants.SENDER_KEY).fetchIfNeededInBackground();
                 }
                 rvChirps.getAdapter().notifyDataSetChanged();
             }
