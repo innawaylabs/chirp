@@ -81,11 +81,11 @@ public class ChatRoomActivity extends AppCompatActivity implements LocationListe
         } else {
             Log.d(TAG, "User: " + UserSession.loggedInUser.getUsername());
         }
-        Toast.makeText(ChatRoomActivity.this, "Welcome to the chat room!!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ChatRoomActivity.this, "Welcome to the new chat room!!!", Toast.LENGTH_SHORT).show();
 
         if (UserSession.locationRequest == null) {
             UserSession.locationRequest = new LocationRequest();
-            UserSession.locationRequest.setInterval(10000);
+            UserSession.locationRequest.setInterval(20000);
             UserSession.locationRequest.setFastestInterval(5000);
             UserSession.locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
