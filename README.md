@@ -21,14 +21,38 @@
   * [x] Polling from Server (with count and max_id/since_id params) 
 
 *Optional User Stories:*
-* [x] Get profile info and populate on profile page 
-* [ ] Interest based filtering
+* [x] Get profile info and populate on profile page
+* [ ] Search for messages
+* [ ] Log out option
+* [ ] Associate login with FB and Twitter to the ParseUser
+* [ ] Don't recreate the activity
+* [ ] Join/Leave conversation - Message based virtual rooms 
+  * [ ] Message ID based rooms for active discussion of interested parties
+* [ ] Dynamic group formation
+* Interest based filtering
   * [ ] Client UI for setting filters (all in one group)
   * [ ] Apply filters while polling the server
-* [ ] Message ID based rooms for active discussion of interested parties
+* [ ] Sign-up email activation
 * [ ] Vote up and Vote down to rate the messages
-* [ ] Talk with at least one IoT machine (like turn on a thermostat/coffee machine saying "hi")
+* [ ] Implicit Intent to share stuff on this app
+* [ ] Fluid and intuitive UX
+* [ ] Private conversation with user from the profile page or from one of the rooms
+* [ ] Option to enable/disable location tracking in the app
+* [ ] Notifications on active app
+* [ ] Notifications on a backgrounded/closed app
+* [ ] Enable/Disable pop-up notifications
+* [ ] Need for email activation 
+* [ ] Use butterknife; Glide with customizations; Parcelable
+* [ ] Private message and Join Conversation
+* [ ] A proper post message screen
+* [ ] Unseen messages notification
+* [ ] Browse conversations and preview before joining
+* [ ] Make pining/unpinning same as joining/leaving
+
+*Bonus User Stories:*
+* [ ] Ability to blacklist users
 * [ ] Dynamic groups with passphrase
+* [ ] Talk with at least one IoT machine (like turn on a thermostat/coffee machine saying "hi")
 * [ ] Screen lock with a PIN/Pattern/Fingerprint
 * [ ] Application walk-through to let users know different flows and features
 * [ ] Oauth 2.0 based login with GitHub/Google+/LinkedIn/Amazon/AOL/Box/Dropbox/Foursquare/Instagram/PayPal/Stripe/Yammer/Yandex/Zendesk
